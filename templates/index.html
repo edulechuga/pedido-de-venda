@@ -1,125 +1,286 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Consulta CNPJ</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta CNPJ | Pedidos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-color: #F2F4F8; /* Light gray-blue */
+            --surface: #FFFFFF;
+            --text-primary: #1C1C1E; /* iOS dark text */
+            --text-secondary: #86868B; /* iOS gray text */
+            --primary-blue: #3277FF; /* From reference image */
+            --primary-blue-end: #33CCFF;
+            --danger: #FF3B30; /* iOS red */
+            --border-color: #E5E5EA;
+            --radius-lg: 16px;
+            --radius-md: 10px;
+            --shadow-soft: 0 10px 40px rgba(0, 0, 0, 0.04);
+            --focus-ring: 0 0 0 4px rgba(50, 119, 255, 0.15);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            padding: 40px 20px;
             max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
         }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .panel {
+            background-color: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
+
         label {
             display: block;
-            margin-bottom: 5px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        input, select {
+
+        input[type="text"], 
+        input[type="number"], 
+        input[type="date"], 
+        input[type="password"], 
+        select {
             width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
+            padding: 14px 16px;
+            font-size: 15px;
+            background-color: #F9FAFB;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            transition: all 0.2s ease;
         }
-        button {
-            background-color: #4CAF50;
+
+        input:focus, select:focus {
+            background-color: var(--surface);
+            border-color: var(--primary-blue);
+            box-shadow: var(--focus-ring);
+            outline: none;
+        }
+
+        input[type="file"] {
+            font-size: 14px;
+            padding: 10px 0;
+            color: var(--text-secondary);
+        }
+
+        small {
+            font-size: 12px;
+            color: var(--text-secondary);
+            display: block;
+            margin-top: 6px;
+        }
+
+        .button-primary {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-end) 100%);
             color: white;
-            padding: 10px 20px;
+            font-weight: 600;
+            font-size: 16px;
             border: none;
+            border-radius: 50px;
+            padding: 16px 32px;
             cursor: pointer;
+            width: 100%;
+            box-shadow: 0 4px 14px rgba(50, 119, 255, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
         }
-        button:hover {
-            background-color: #45a049;
+
+        .button-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(50, 119, 255, 0.4);
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 24px;
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-soft);
         }
+
         th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
+            padding: 16px;
             text-align: left;
+            border-bottom: 1px solid var(--border-color);
         }
+
         th {
-            background-color: #f2f2f2;
+            background-color: #F9FAFB;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        td input[type="number"] {
+            padding: 8px 12px;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .highlight-text {
+            color: var(--danger);
+        }
+        
+        .upload-section {
+            background: #FAFAFC;
+            border: 1px dashed #C7C7CC;
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 30px;
+        }
+
+        .form-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 600px) {
+            .form-grid-2, .form-grid-3 {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>Consulta CNPJ</h1>
+    <h1>Gerador de Pedidos</h1>
     <form method="post" id="mainForm" enctype="multipart/form-data">
-        <div class="form-group" style="background-color: #f9f9f9; padding: 10px; border: 1px dashed #ccc; margin-bottom: 20px;">
-            <label for="senha_upload" style="color: #c00;"><strong>Senha de Autorização:</strong></label>
-            <input type="password" id="senha_upload" name="senha_upload" placeholder="Só preencha se for enviar uma nova tabela mestra...">
+        <div class="upload-section" id="upload-panel">
+            <div class="form-group">
+                <label for="senha_upload" class="highlight-text">Senha de Autorização (Admin):</label>
+                <input type="password" id="senha_upload" name="senha_upload" placeholder="LOCKED - Digite a senha master para envio">
+            </div>
             
-            <label for="tabela_mestra" style="margin-top: 10px;"><strong>Atualizar Tabela de Preços Mestra (Upload .xlsx):</strong></label>
-            <input type="file" id="tabela_mestra" name="tabela_mestra" accept=".xlsx">
-            <small>Deixe em branco para usar a tabela atual.</small>
-            <div id="aba_selector_container" style="display: none; margin-top: 15px;">
-                <label for="nome_aba_tabela"><strong>Selecionar Aba da Tabela:</strong></label>
+            <div class="form-group" style="margin-bottom: 0;">
+                <label for="tabela_mestra">Atualizar Tabela Mestra (.xlsx):</label>
+                <input type="file" id="tabela_mestra" name="tabela_mestra" accept=".xlsx">
+                <small>Deixe em branco para usar a tabela padrão do sistema.</small>
+            </div>
+            
+            <div id="aba_selector_container" class="form-group" style="display: none; margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 20px;">
+                <label for="nome_aba_tabela">Selecionar Planilha Alvo:</label>
                 <select id="nome_aba_tabela" name="nome_aba_tabela">
                     <option value="">Aba Padrão (Ativa)</option>
                 </select>
             </div>
         </div>
-        <div class="form-group">
-            <label for="cnpj">CNPJ:</label>
-            <input type="text" id="cnpj" name="cnpj" required>
-        </div>
 
-        <div class="form-group">
-            <label for="tipo">Tipo:</label>
-            <select id="tipo" name="tipo">
-                <option value="POS">POS</option>
-                <option value="OEM">OEM</option>
-            </select>
-        </div>
+        <div class="panel">
+            <div class="form-grid-2">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="cnpj">CNPJ:</label>
+                    <input type="text" id="cnpj" name="cnpj" required>
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="data_pedido">Data do Pedido:</label>
+                    <input type="date" id="data_pedido" name="data_pedido">
+                </div>
+            </div>
+            <br>
+            <div class="form-grid-2">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="tipo">Tipo:</label>
+                    <select id="tipo" name="tipo">
+                        <option value="POS">POS</option>
+                        <option value="OEM">OEM</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="uso">Uso:</label>
+                    <select id="uso" name="uso">
+                        <option value="CONSUMO">CONSUMO</option>
+                        <option value="INDUSTRIALIZAÇÃO">INDUSTRIALIZAÇÃO</option>
+                        <option value="REVENDA">REVENDA</option>
+                    </select>
+                </div>
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="prazo_pagamento">Prazo de Pagamento:</label>
+                <select id="prazo_pagamento" name="prazo_pagamento">
+                    <option value="100% ANTECIPADO">100% ANTECIPADO</option>
+                    <option value="50% ANTECIPADO / 50% 30 / 60 DDL NO BOLETO">50% ANTECIPADO / 50% 30 / 60 DDL NO BOLETO</option>
+                    <option value="30 DDL NO BOLETO">30 DDL NO BOLETO</option>
+                    <option value="30 / 60 DDL NO BOLETO">30 / 60 DDL NO BOLETO</option>
+                    <option value="30 / 45 / 60 DDL NO BOLETO">30 / 45 / 60 DDL NO BOLETO</option>
+                    <option value="30 / 60 / 90 DDL NO BOLETO">30 / 60 / 90 DDL NO BOLETO</option>
+                    <option value="30 / 60 / 90 / 120 DDL NO BOLETO">30 / 60 / 90 / 120 DDL NO BOLETO</option>
+                    <option value="30 / 45 / 60 / 75 / 90 / 105 /120 DDL NO BOLETO">30 / 45 / 60 / 75 / 90 / 105 /120 DDL NO BOLETO</option>
+                </select>
+            </div>
 
-        <div class="form-group">
-            <label for="uso">Uso:</label>
-            <select id="uso" name="uso">
-                <option value="CONSUMO">CONSUMO</option>
-                <option value="INDUSTRIALIZAÇÃO">INDUSTRIALIZAÇÃO</option>
-                <option value="REVENDA">REVENDA</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="data_pedido">Data do Pedido:</label>
-            <input type="date" id="data_pedido" name="data_pedido">
-        </div>
-
-        <div class="form-group">
-            <label for="prazo_pagamento">Prazo de Pagamento:</label>
-            <select id="prazo_pagamento" name="prazo_pagamento">
-                <option value="100% ANTECIPADO">100% ANTECIPADO</option>
-                <option value="50% ANTECIPADO / 50% 30 / 60 DDL NO BOLETO">50% ANTECIPADO / 50% 30 / 60 DDL NO BOLETO</option>
-                <option value="30 DDL NO BOLETO">30 DDL NO BOLETO</option>
-                <option value="30 / 60 DDL NO BOLETO">30 / 60 DDL NO BOLETO</option>
-                <option value="30 / 45 / 60 DDL NO BOLETO">30 / 45 / 60 DDL NO BOLETO</option>
-                <option value="30 / 60 / 90 DDL NO BOLETO">30 / 60 / 90 DDL NO BOLETO</option>
-                <option value="30 / 60 / 90 / 120 DDL NO BOLETO">30 / 60 / 90 / 120 DDL NO BOLETO</option>
-                <option value="30 / 45 / 60 / 75 / 90 / 105 /120 DDL NO BOLETO">30 / 45 / 60 / 75 / 90 / 105 /120 DDL NO BOLETO</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="frete">Frete:</label>
-            <select id="frete" name="frete">
-                <option value="CIF">CIF</option>
-                <option value="FOB">FOB</option>
-                <option value="DEMO JÁ NO CLIENTE">DEMO JÁ NO CLIENTE</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="st_difal">ST/Difal:</label>
-            <select id="st_difal" name="st_difal">
-                <option value="SIM">SIM</option>
-                <option value="NÃO">NÃO</option>
-                <option value="ISENTO">ISENTO</option>
-            </select>
+            <div class="form-grid-3">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="representante">Representante:</label>
+                    <input type="text" id="representante" name="representante">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="transportadora">Transportadora:</label>
+                    <input type="text" id="transportadora" name="transportadora">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="frete">Frete:</label>
+                    <select id="frete" name="frete">
+                        <option value="CIF">CIF</option>
+                        <option value="FOB">FOB</option>
+                        <option value="DEMO JÁ NO CLIENTE">DEMO JÁ NO CLIENTE</option>
+                    </select>
+                </div>
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="st_difal">ST/Difal (% se aplicável):</label>
+                <input type="number" step="0.01" id="st_difal" name="st_difal">
+            </div>
         </div>
 
         <h2>Tabela de Preços</h2>
@@ -144,9 +305,9 @@
                 </tr>
                 {% endfor %}
             </tbody>
-        </table>
+        </div>
 
-        <button type="submit">Buscar CNPJ</button>
+        <button type="submit" class="button-primary">Buscar CNPJ / Processar</button>
     </form>
 
     <script>
