@@ -116,6 +116,12 @@ def index():
             # Salvar a tabela mestra se foi enviada (overwrite)
             tabela_upload = request.files.get('tabela_mestra')
             if tabela_upload and tabela_upload.filename != '':
+                senha_correta = os.environ.get('UPLOAD_PASSWORD', 'admin123')
+                senha_enviada = request.form.get('senha_upload')
+                if senha_enviada != senha_correta:
+                    logger.warning("Tentativa de upload de tabela recusada: senha incorreta.")
+                    return 'Erro: Senha de autorização incorreta. A tabela não foi alterada.', 403
+
                 tabela_mestra_path = os.path.join(base_dir, 'Tabela_de_Preços_Mestra.xlsx')
                 tabela_upload.save(tabela_mestra_path)
                 logger.info(f"Nova tabela mestra carregada: {tabela_upload.filename}")
@@ -188,6 +194,12 @@ def get_sheets():
     if request.method == 'POST':
         tabela_upload = request.files.get('tabela_mestra')
         if tabela_upload and tabela_upload.filename != '':
+            senha_correta = os.environ.get('UPLOAD_PASSWORD', 'admin123')
+            senha_enviada = request.form.get('senha_upload')
+            if senha_enviada != senha_correta:
+                logger.warning("Tentativa de recuperar abas recusada: senha incorreta.")
+                return jsonify({"sheets": [], "error": "Senha Inválida."}), 403
+            
             tabela_upload.save(tabela_path)
             # Ao carregar nova tabela, limpa o cache da última aba usada
             if os.path.exists(aba_cache_path):

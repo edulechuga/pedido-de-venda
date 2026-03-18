@@ -50,7 +50,10 @@
     <h1>Consulta CNPJ</h1>
     <form method="post" id="mainForm" enctype="multipart/form-data">
         <div class="form-group" style="background-color: #f9f9f9; padding: 10px; border: 1px dashed #ccc; margin-bottom: 20px;">
-            <label for="tabela_mestra"><strong>Atualizar Tabela de Preços Mestra (Upload .xlsx):</strong></label>
+            <label for="senha_upload" style="color: #c00;"><strong>Senha de Autorização:</strong></label>
+            <input type="password" id="senha_upload" name="senha_upload" placeholder="Só preencha se for enviar uma nova tabela mestra...">
+            
+            <label for="tabela_mestra" style="margin-top: 10px;"><strong>Atualizar Tabela de Preços Mestra (Upload .xlsx):</strong></label>
             <input type="file" id="tabela_mestra" name="tabela_mestra" accept=".xlsx">
             <small>Deixe em branco para usar a tabela atual.</small>
             <div id="aba_selector_container" style="display: none; margin-top: 15px;">
@@ -171,12 +174,20 @@
                 
                 let formData = new FormData();
                 formData.append('tabela_mestra', fileInput.files[0]);
+                formData.append('senha_upload', document.getElementById('senha_upload').value);
                 
                 try {
                     let response = await fetch('/get_sheets', {
                         method: 'POST',
                         body: formData
                     });
+                    
+                    if (response.status === 403) {
+                        alert("Senha de autorização incorreta! Não foi possível ler o arquivo.");
+                        fileInput.value = "";
+                        carregarAbasExistentes();
+                        return;
+                    }
                     
                     if (response.ok) {
                         let data = await response.json();
