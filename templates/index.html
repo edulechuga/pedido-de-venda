@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Consulta CNPJ</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Consulta CNPJ</h1>
+    <form method="post" id="mainForm" enctype="multipart/form-data">
+        <div class="form-group" style="background-color: #f9f9f9; padding: 10px; border: 1px dashed #ccc; margin-bottom: 20px;">
+            <label for="tabela_mestra"><strong>Atualizar Tabela de Preços Mestra (Upload .xlsx):</strong></label>
+            <input type="file" id="tabela_mestra" name="tabela_mestra" accept=".xlsx">
+            <small>Deixe em branco para usar a tabela atual.</small>
+            <div id="aba_selector_container" style="display: none; margin-top: 15px;">
+                <label for="nome_aba_tabela"><strong>Selecionar Aba da Tabela:</strong></label>
+                <select id="nome_aba_tabela" name="nome_aba_tabela">
+                    <option value="">Aba Padrão (Ativa)</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="cnpj">CNPJ:</label>
+            <input type="text" id="cnpj" name="cnpj" required>
+        </div>
+
+        <div class="form-group">
+            <label for="tipo">Tipo:</label>
+            <select id="tipo" name="tipo">
+                <option value="POS">POS</option>
+                <option value="OEM">OEM</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="uso">Uso:</label>
+            <select id="uso" name="uso">
+                <option value="CONSUMO">CONSUMO</option>
+                <option value="INDUSTRIALIZAÇÃO">INDUSTRIALIZAÇÃO</option>
+                <option value="REVENDA">REVENDA</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="data_pedido">Data do Pedido:</label>
+            <input type="date" id="data_pedido" name="data_pedido">
+        </div>
+
+        <div class="form-group">
+            <label for="prazo_pagamento">Prazo de Pagamento:</label>
+            <select id="prazo_pagamento" name="prazo_pagamento">
+                <option value="100% ANTECIPADO">100% ANTECIPADO</option>
+                <option value="50% ANTECIPADO / 50% 30 / 60 DDL NO BOLETO">50% ANTECIPADO / 50% 30 / 60 DDL NO BOLETO</option>
+                <option value="30 DDL NO BOLETO">30 DDL NO BOLETO</option>
+                <option value="30 / 60 DDL NO BOLETO">30 / 60 DDL NO BOLETO</option>
+                <option value="30 / 45 / 60 DDL NO BOLETO">30 / 45 / 60 DDL NO BOLETO</option>
+                <option value="30 / 60 / 90 DDL NO BOLETO">30 / 60 / 90 DDL NO BOLETO</option>
+                <option value="30 / 60 / 90 / 120 DDL NO BOLETO">30 / 60 / 90 / 120 DDL NO BOLETO</option>
+                <option value="30 / 45 / 60 / 75 / 90 / 105 /120 DDL NO BOLETO">30 / 45 / 60 / 75 / 90 / 105 /120 DDL NO BOLETO</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="frete">Frete:</label>
+            <select id="frete" name="frete">
+                <option value="CIF">CIF</option>
+                <option value="FOB">FOB</option>
+                <option value="DEMO JÁ NO CLIENTE">DEMO JÁ NO CLIENTE</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="st_difal">ST/Difal:</label>
+            <select id="st_difal" name="st_difal">
+                <option value="SIM">SIM</option>
+                <option value="NÃO">NÃO</option>
+                <option value="ISENTO">ISENTO</option>
+            </select>
+        </div>
+
+        <h2>Tabela de Preços</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Quantidade</th>
+                    <th>Código do Produto</th>
+                    <th>Descrição</th>
+                    <th>Preço Unitário</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in range(5) %}
+                <tr>
+                    <td><input type="number" name="quantidade_{{ i }}" step="1" min="0"></td>
+                    <td><input type="text" name="codigo_produto_{{ i }}"></td>
+                    <td><input type="text" name="descricao_{{ i }}" readonly></td>
+                    <td><input type="number" name="preco_unitario_{{ i }}" step="0.01" readonly></td>
+                    <td><input type="number" name="total_{{ i }}" step="0.01" readonly></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <button type="submit">Buscar CNPJ</button>
+    </form>
+
+    <script>
+        document.getElementById('cnpj').addEventListener('input', function(e) {
+            let cnpj = e.target.value.replace(/\D/g, '');
+            if (cnpj.length > 14) cnpj = cnpj.slice(0, 14);
+            
+            if (cnpj.length === 14) {
+                cnpj = cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5");
+            }
+            
+            e.target.value = cnpj;
+        });
+
+        // Logica para carregar abas dinamicamente quando um arquivo novo for selecionado
+        let fileInput = document.getElementById('tabela_mestra');
+        let abaContainer = document.getElementById('aba_selector_container');
+        let abaSelect = document.getElementById('nome_aba_tabela');
+
+        fileInput.addEventListener('change', async function() {
+            if (fileInput.files.length > 0) {
+                // Mostrar a caixa e avisar que esta carregando
+                abaContainer.style.display = 'block';
+                abaSelect.innerHTML = '<option value="">Carregando abas...</option>';
+                
+                let formData = new FormData();
+                formData.append('tabela_mestra', fileInput.files[0]);
+                
+                try {
+                    let response = await fetch('/get_sheets', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    if (response.ok) {
+                        let data = await response.json();
+                        abaSelect.innerHTML = '<option value="">Aba Padrão (Ativa)</option>';
+                        if (data.sheets) {
+                            data.sheets.forEach(sheet => {
+                                let opt = document.createElement('option');
+                                opt.value = sheet;
+                                opt.textContent = sheet;
+                                abaSelect.appendChild(opt);
+                            });
+                        }
+                    } else {
+                        abaSelect.innerHTML = '<option value="">Erro ao carregar abas</option>';
+                    }
+                } catch (e) {
+                    abaSelect.innerHTML = '<option value="">Erro ao conectar</option>';
+                }
+            } else {
+                // Se o usuário cancelou a escolha do arquivo, carrega as abas do arquivo já existente no servidor
+                carregarAbasExistentes();
+            }
+        });
+
+        async function carregarAbasExistentes() {
+            try {
+                let response = await fetch('/get_sheets');
+                if (response.ok) {
+                    let data = await response.json();
+                    if (data.sheets && data.sheets.length > 0) {
+                        abaContainer.style.display = 'block';
+                        // Modify the default option text depending on if we have a last_sheet
+                        if (data.last_sheet) {
+                            abaSelect.innerHTML = '<option value="">Restaurar Padrão (Sem Aba Específica)</option>';
+                        } else {
+                            abaSelect.innerHTML = '<option value="">Aba Padrão (Ativa)</option>';
+                        }
+
+                        data.sheets.forEach(sheet => {
+                            let opt = document.createElement('option');
+                            opt.value = sheet;
+                            opt.textContent = sheet;
+                            
+                            // Auto-select if it matches the last used sheet saved on the server
+                            if (sheet === data.last_sheet) {
+                                opt.selected = true;
+                            }
+                            
+                            abaSelect.appendChild(opt);
+                        });
+                    }
+                }
+            } catch (e) {
+                console.error("Erro ao carregar abas existentes", e);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', carregarAbasExistentes);
+    </script>
+</body>
+</html>

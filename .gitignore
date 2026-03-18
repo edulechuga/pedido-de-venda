@@ -1,0 +1,20 @@
+# Ambientes virtuais
+venv/
+env/
+.env
+
+# Arquivos temporários e logs
+.tmp/
+system.log
+*.log
+
+# Caches de Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Arquivos do sistema (Mac)
+.DS_Store
+
+# (Opcional) A tabela mestre se não quiser versionar os preços reais
+# Tabela_de_Preços_Mestra.xlsx

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados da Consulta</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .info-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .info-value {
+            padding: 8px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        button {
+            flex: 1;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .download-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .download-btn:hover {
+            background-color: #45a049;
+        }
+        .back-btn {
+            background-color: #6c757d;
+            color: white;
+        }
+        .back-btn:hover {
+            background-color: #5a6268;
+        }
+        h2 {
+            color: #333;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        li {
+            padding: 8px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Resultados da Consulta</h1>
+    
+    <div class="info-group">
+        <label>Nome:</label>
+        <div class="info-value">{{ data.nome }}</div>
+    </div>
+
+    <div class="info-group">
+        <label>Nome Fantasia:</label>
+        <div class="info-value">{{ data.fantasia }}</div>
+    </div>
+
+    <div class="info-group">
+        <label>CNPJ:</label>
+        <div class="info-value">{{ data.cnpj }}</div>
+    </div>
+
+    <div class="info-group">
+        <label>Inscrição Estadual:</label>
+        <div class="info-value">{{ data.number_ie }}</div>
+    </div>
+
+    <div class="info-group">
+        <label>Endereço:</label>
+        <div class="info-value">{{ data.logradouro_numero }}</div>
+    </div>
+
+    <div class="info-group">
+        <label>Complemento:</label>
+        <div class="info-value">{{ data.complemento }}</div>
+    </div>
+
+    <div class="info-group">
+        <label>Município:</label>
+        <div class="info-value">{{ data.municipio }}</div>
+    </div>
+
+    <div class="info-group">
+        <label>UF:</label>
+        <div class="info-value">{{ data.uf }}</div>
+    </div>
+
+    <div class="info-group">
+        <label>Bairro:</label>
+        <div class="info-value">{{ data.bairro }}</div>
+    </div>
+
+    <div class="info-group">
+        <label>CEP:</label>
+        <div class="info-value">{{ data.cep }}</div>
+    </div>
+
+    <div class="info-group">
+        <label>Data do Pedido:</label>
+        <div class="info-value">{{ data.data_pedido }}</div>
+    </div>
+
+    <div class="info-group">
+        <label>Prazo de Pagamento:</label>
+        <div class="info-value">{{ data.prazo_pagamento }}</div>
+    </div>
+
+    <div class="info-group">
+        <label>Frete:</label>
+        <div class="info-value">{{ data.frete }}</div>
+    </div>
+
+    <div class="info-group">
+        <label>ST/Difal:</label>
+        <div class="info-value">{{ data.st_difal }}</div>
+    </div>
+
+    <h2>IE</h2>
+    <p><strong>Total de Resultados:</strong> {{ data.quantidade_total }}</p>
+    <ul>
+        {% for ie in data.resultados_ie %}
+            <li>{{ ie.numero }} - Estado: {{ ie.estado }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Dolar</h2>
+    <p><strong>Data da cotação do dólar:</strong> {{ data.data_formatada }}</p>
+    <p><strong>Cotação do dólar:</strong> R$ {{ data.cotacao_venda }}</p>
+
+    <h2>Tabela de Preços</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Quantidade</th>
+                <th>Código do Produto</th>
+                <th>Descrição</th>
+                <th>Preço Unitário</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if data.tabela_precos %}
+                {% for item in data.tabela_precos %}
+                    <tr>
+                        <td>{{ item.quantidade }}</td>
+                        <td>{{ item.codigo_produto }}</td>
+                        <td>{{ item.descricao }}</td>
+                        <td>{{ item.preco_unitario }}</td>
+                        <td>{{ item.total }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr><td colspan="5">Nenhum item na tabela de preços.</td></tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    <div class="button-group">
+        <form action="/download" method="post">
+            <button type="submit" class="download-btn">Baixar Excel</button>
+        </form>
+        <button onclick="window.location.href='/'" class="back-btn">Voltar</button>
+    </div>
+</body>
+</html>

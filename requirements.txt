@@ -1,0 +1,4 @@
+Flask
+openpyxl
+requests
+gunicorn  # For a more robust way to run Flask
